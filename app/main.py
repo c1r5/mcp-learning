@@ -11,7 +11,17 @@ from app.modules.pastebin import PastebinWrapper
 
 load_dotenv()
 
+api_key = getEnv("PASTEBIN_DEV_APIKEY")
+user_key = getEnv("PASTEBIN_USER_APIKEY")
+
 mcp = FastMCP("Personal MCP Tools")
+
+# Create an instance of the PastebinWrapper class
+pastebin = PastebinWrapper(
+    api_key=api_key,
+    user_key=user_key
+)
+
 
 @mcp.tool(
     name="Pastebin User Info",
@@ -19,14 +29,6 @@ mcp = FastMCP("Personal MCP Tools")
 )
 def pastebin_userinfo():
     try:
-        api_key = getEnv("PASTEBIN_DEV_APIKEY")
-        user_key = getEnv("PASTEBIN_USER_APIKEY")
-        # Create an instance of the PastebinWrapper class
-        pastebin = PastebinWrapper(
-            api_key=api_key,
-            user_key=user_key
-        )
-
         userinfo = pastebin.get_userinfo()
         if userinfo.get('user'):
             userinfo = userinfo['user']
