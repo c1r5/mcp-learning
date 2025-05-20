@@ -12,6 +12,7 @@ Este projeto é um ambiente de aprendizado focado no desenvolvimento e experimen
 ## Funcionalidades já desenvolvidas
 
 - **MCP do Pastebin**: Implementação de um módulo para integração e manipulação de dados do Pastebin, incluindo funções auxiliares e testes automatizados para garantir o correto funcionamento.
+  ![Demonstração 1](assets/demo1.png)
 
 ## Observações
 
