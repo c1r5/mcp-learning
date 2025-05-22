@@ -1,0 +1,14 @@
+{
+    "servers": {
+        "mcp-learning-project": {
+            "type": "stdio",
+            "command": "uv",
+            "args": [
+                "--directory",
+                "/home/c1r5dev/Desktop/project/mcp-learning/examples/pastebinMCP/app",
+                "run",
+                "main.py"
+            ]
+        }
+    }
+}
