@@ -11,6 +11,23 @@ logging.basicConfig(
   filemode='w',
 )
 
+def test_create_paste():
+  api_key = os.getenv("API_DEV_KEY")
+  user_key = os.getenv("API_USER_KEY")
+
+  assert api_key is not None, "PASTEBIN_DEV_APIKEY is not set in .env"
+  assert user_key is not None, "PASTEBIN_USERKEY is not set in .env"
+
+  pastebin = PastebinWrapper(api_key, user_key)
+  paste_url = pastebin.create_paste(
+    text="This is a test paste",
+    title="Test Paste",
+    privacy=0
+  )
+
+  assert paste_url is not None, "Failed to create paste"
+  assert "pastebin.com/" in paste_url, "Invalid paste URL"
+
 def test_get_userinfo():
   api_key = os.getenv("PASTEBIN_DEV_APIKEY")
   user_key = os.getenv("PASTEBIN_USER_APIKEY")

@@ -33,7 +33,28 @@ class PastebinWrapper:
 
     return userinfo_dict
 
+  def create_paste(self, text: str, title: str = "Untitled", privacy: int = 0):
+    logger.info(f"Creating paste with title '{title}'...")
 
+    response = requests.post(
+      url=f"{PastebinWrapper.__BASEURL}/api_post.php",
+      data={
+        'api_dev_key': self.__API_DEV,
+        'api_user_key': self.__USER_DEV,
+        'api_option': 'paste',
+        'api_paste_expire_date': '10M',
+        'api_paste_code': text,
+        'api_paste_name': title,
+        'api_paste_private': privacy
+      }
+    )
+
+    if response.status_code != 200:
+      raise Exception(f"Error: {response.status_code} - {response.text}")
+
+    logger.info(f"Paste created with URL: {response.text}")
+
+    return response.text
   @staticmethod
   def generate_userkey(
     api_key: str,

@@ -11,8 +11,8 @@ from app.modules.pastebin import PastebinWrapper
 
 load_dotenv()
 
-api_key = getEnv("PASTEBIN_DEV_APIKEY")
-user_key = getEnv("PASTEBIN_USER_APIKEY")
+api_key = getEnv("API_DEV_KEY")
+user_key = getEnv("API_USER_KEY")
 
 mcp = FastMCP("Personal MCP Tools")
 
@@ -22,12 +22,30 @@ pastebin = PastebinWrapper(
     user_key=user_key
 )
 
+@mcp.tool(
+    name="Pastebin Paste Creation Tool",
+    description="pastebin_create_paste",
+)
+def pastebin_create_paste(
+    text: str,
+    title: str = "Untitled",
+    privacy: int = 0
+) -> str:
+    try:
+        paste_url = pastebin.create_paste(
+            text=text,
+            title=title,
+            privacy=privacy
+        )
+        return "Created paste with URL: " + paste_url
+    except Exception as e:
+        return f"A exeception ocurred: {e}"
 
 @mcp.tool(
     name="Pastebin User Info",
-    description="Get Pastebin user info"
+    description="get_user_info",
 )
-def pastebin_userinfo():
+def pastebin_userinfo() -> str:
     try:
         userinfo = pastebin.get_userinfo()
         if userinfo.get('user'):
@@ -45,3 +63,7 @@ def pastebin_userinfo():
         """
     except Exception as e:
         return f"Error: {e}"
+
+if __name__ == "__main__":
+    # Initialize and run the server
+    mcp.run(transport='stdio')
