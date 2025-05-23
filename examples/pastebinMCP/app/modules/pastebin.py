@@ -1,10 +1,21 @@
 import logging
+from typing import Literal
 import requests
 import xmltodict
 
 logger = logging.getLogger(__name__)
 
 class PastebinWrapper:
+  EXPIRATION_VALUES = Literal[
+    "10M",  # 10 minutes
+    "1H",   # 1 hour
+    "1D",   # 1 day
+    "1W",   # 1 week
+    "2W",   # 2 weeks
+    "1M",   # 1 month
+    "1Y",   # 1 year
+    "N"     # Never expire
+  ]
   __BASEURL = "https://pastebin.com/api"
   __API_DEV = None
   __USER_DEV = None
@@ -33,20 +44,26 @@ class PastebinWrapper:
 
     return userinfo_dict
 
-  def create_paste(self, text: str, title: str = "Untitled", privacy: int = 0):
+  def create_paste(
+      self, 
+      text: str, 
+      title: str = "Untitled", 
+      privacy: int = 0, 
+      duration: EXPIRATION_VALUES = "N"
+    ):
     logger.info(f"Creating paste with title '{title}'...")
-
-    response = requests.post(
-      url=f"{PastebinWrapper.__BASEURL}/api_post.php",
-      data={
+    body = {
         'api_dev_key': self.__API_DEV,
         'api_user_key': self.__USER_DEV,
         'api_option': 'paste',
-        'api_paste_expire_date': '10M',
+        'api_paste_expire_date': duration,
         'api_paste_code': text,
         'api_paste_name': title,
         'api_paste_private': privacy
       }
+    response = requests.post(
+      url=f"{PastebinWrapper.__BASEURL}/api_post.php",
+      data=body
     )
 
     if response.status_code != 200:

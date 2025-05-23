@@ -1,4 +1,5 @@
 import sys
+from typing import Literal
 from dotenv import load_dotenv
 from mcp.server import FastMCP
 
@@ -21,28 +22,45 @@ pastebin = PastebinWrapper(
     api_key=api_key,
     user_key=user_key
 )
-
+@mcp.resource(
+        uri="helper://expiration_values",
+        name='pastebin_expire_time_values',
+        description='can_be: 10M, 1H, 1D, 1W, 2W, 1M, 1Y',
+)
+def pastebin_expire_time_values() -> str:
+    return """
+    10M: 10 Minutes
+    1H: 1 Hour
+    1D: 1 Day
+    1W: 1 Week
+    2W: 2 Weeks
+    1M: 1 Month
+    1Y: 1 Year
+    N: Never
+    """
 @mcp.tool(
-    name="Pastebin Paste Creation Tool",
+    name="pastebin_paste_creation_tool",
     description="pastebin_create_paste",
 )
 def pastebin_create_paste(
     text: str,
     title: str = "Untitled",
-    privacy: int = 0
+    privacy: int = 0,
+    duration: PastebinWrapper.EXPIRATION_VALUES = "N",
 ) -> str:
     try:
         paste_url = pastebin.create_paste(
             text=text,
             title=title,
-            privacy=privacy
+            privacy=privacy,
+            duration=duration,
         )
         return "Created paste with URL: " + paste_url
     except Exception as e:
         return f"A exeception ocurred: {e}"
 
 @mcp.tool(
-    name="Pastebin User Info",
+    name="pastebin_userinfo_tool",
     description="get_user_info",
 )
 def pastebin_userinfo() -> str:
